@@ -9,7 +9,7 @@ interface TermListProps {
 }
 
 export function TermList({ searchQuery, filter }: TermListProps) {
-  const { terms, toggleUnderstood, deleteTerm, updateTerm } = useTerms();
+  const { terms, toggleUnderstood, deleteTerm, updateTerm, markAllUnderstood } = useTerms();
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editTerm, setEditTerm] = useState('');
   const [editDefinition, setEditDefinition] = useState('');
@@ -51,6 +51,18 @@ export function TermList({ searchQuery, filter }: TermListProps) {
 
   return (
     <div className="space-y-4">
+      {filter === 'notUnderstood' && filteredTerms.length > 0 && (
+        <div className="flex justify-end mb-4">
+          <button
+            onClick={markAllUnderstood}
+            className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 flex items-center gap-2"
+            title="Mark all terms as understood"
+          >
+            <Check className="h-5 w-5" />
+            Mark All Understood
+          </button>
+        </div>
+      )}
       {filteredTerms.map((term) => {
         const { googleUrl, wikipediaUrl } = getSearchLinks(term.term);
         const isEditing = editingId === term.id;

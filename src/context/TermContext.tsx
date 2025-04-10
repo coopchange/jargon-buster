@@ -99,6 +99,26 @@ export function TermProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const markAllUnderstood = async () => {
+    try {
+      const response = await fetch(`${API_URL}/terms/mark-all-understood`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      if (response.ok) {
+        const dateUnderstood = new Date().toISOString();
+        setTerms(prev => prev.map(term => ({
+          ...term,
+          understood: true,
+          dateUnderstood
+        })));
+      }
+    } catch (error) {
+      console.error('Error marking all terms as understood:', error);
+    }
+  };
+
   const deleteTerm = async (id: string) => {
     try {
       const response = await fetch(`${API_URL}/terms/${id}`, {
@@ -114,7 +134,7 @@ export function TermProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <TermContext.Provider value={{ terms, addTerm, updateTerm, toggleUnderstood, deleteTerm }}>
+    <TermContext.Provider value={{ terms, addTerm, updateTerm, toggleUnderstood, deleteTerm, markAllUnderstood }}>
       {children}
     </TermContext.Provider>
   );

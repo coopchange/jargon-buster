@@ -106,6 +106,20 @@ app.put('/api/terms/:id/toggle', async (req, res) => {
   }
 });
 
+// Mark all terms as understood
+app.put('/api/terms/mark-all-understood', async (req, res) => {
+  try {
+    const dateUnderstood = new Date().toISOString();
+    await run(
+      'UPDATE terms SET understood = 1, dateUnderstood = ?',
+      [dateUnderstood]
+    );
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Delete a term
 app.delete('/api/terms/:id', async (req, res) => {
   try {
